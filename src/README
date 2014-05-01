@@ -1,5 +1,20 @@
+Project: CS621 Lab 1 - Proxy Server
+Author: Vincent Yao Zhang
+
+
+
+### Executable environment
+
+ - Must add -deprecation compiler flag to compile
+
+ - Recommended starting port number: 1234
+
+
+
+### Compile and run instructions
+
 1. 
-Compile: javac -deprecation *.class
+Compile: javac -deprecation *.java
 
 2a. 
 Create manifest: echo Main-Class: ProxyCache >manifest.txt

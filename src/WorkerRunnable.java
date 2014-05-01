@@ -23,7 +23,6 @@ public class WorkerRunnable implements Runnable {
 
     public void run() {
       Socket proxyServer = null;
-      String host = "google.com";
       HttpRequest request = null;
       HttpResponse response = null;
       InputStream streamFromClient = null;
@@ -42,7 +41,6 @@ public class WorkerRunnable implements Runnable {
         streamToClient = proxyClient.getOutputStream();
         BufferedReader fromClient = new BufferedReader(new InputStreamReader(streamFromClient));        
         request = new HttpRequest(fromClient);
-        host = request.getHost();
       } catch (IOException e) {
           System.out.println("Error reading request from client: " + e);
           return;
@@ -51,7 +49,7 @@ public class WorkerRunnable implements Runnable {
       /* Send request to server */
       try {
           /* Open socket and write request to socket */
-          proxyServer = new Socket(host, 80);
+          proxyServer = new Socket(request.getHost(), request.getPort());
           streamFromServer = proxyServer.getInputStream();
           streamToServer = proxyServer.getOutputStream();
           DataOutputStream toServer = new DataOutputStream(streamToServer);
