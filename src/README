@@ -1,0 +1,12 @@
+1. 
+Compile: javac -deprecation *.class
+
+2a. 
+Create manifest: echo Main-Class: ProxyCache >manifest.txt
+Create jar: jar cvfm ProxyCache.jar manifest.txt *.class
+
+2b.
+Create jar directly: jar cvfe ProxyCache.jar ProxyCache *.class
+
+3.
+Run jar: java -jar ProxyCache.jar [port number]
