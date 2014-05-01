@@ -43,8 +43,6 @@ public class WorkerRunnable implements Runnable {
         BufferedReader fromClient = new BufferedReader(new InputStreamReader(streamFromClient));        
         request = new HttpRequest(fromClient);
         host = request.getHost();
-//              fromClient.close();
-//          System.out.println("============== " + request.toString());
       } catch (IOException e) {
           System.out.println("Error reading request from client: " + e);
           return;
@@ -59,8 +57,7 @@ public class WorkerRunnable implements Runnable {
           DataOutputStream toServer = new DataOutputStream(streamToServer);
           toServer.writeBytes(request.toString());
           toServer.flush();
-          System.out.println("###### Completed sending request to server");
-//            toServer.close();
+//          System.out.println("###### Completed sending request to server");
       } catch (UnknownHostException e) {
           System.out.println("Unknown host: " + request.getHost());
           System.out.println(e);
@@ -72,10 +69,8 @@ public class WorkerRunnable implements Runnable {
       
       /* Read response and forward it to client */
       try {
-          System.out.println("###### Awaiting response from server...");
+//          System.out.println("###### Awaiting response from server...");
           DataInputStream fromServer = new DataInputStream(streamFromServer);
-//          System.out.println("MID! Stream FROM server = " + streamFromServer);
-//          System.out.println("MID! DIS FROM server = first byte = " + fromServer.readByte());
           response = new HttpResponse(fromServer);
           DataOutputStream toClient = new DataOutputStream(proxyClient.getOutputStream());
           
@@ -88,12 +83,11 @@ public class WorkerRunnable implements Runnable {
       } catch (IOException e) {
           System.out.println("Error writing response to client: " + "");
           e.printStackTrace();
-      } 
-      
-//        output.write(("HTTP/1.1 200 OK\n\nWorkerRunnable: " +
-//                this.serverText + " - " + time + "").getBytes());
+      }
 
       System.out.println("##### Socket reaches its end! Request processed: " + time);
+      
+      /* Properly terminate / close everything */
       try {
         streamToClient.close();
         streamFromClient.close();

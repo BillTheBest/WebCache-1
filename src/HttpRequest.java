@@ -30,18 +30,11 @@ public class HttpRequest {
       } catch (IOException e) {
           System.out.println("Error reading request line: " + e);
       }
-    
-      System.out.println("###### FIRST LINE = " + firstLine);
       String[] tmp = firstLine.split(" ");
       method = tmp[0];
       URI = tmp[1];
       version = tmp[2];
-
-//      int i = 0;
-//      for (String s : tmp) {
-//        System.out.println("TMP #" + i + " = " + s);  
-//        i++;
-//      }
+      
       System.out.println("URI is: " + URI);
     
       if (!method.equals("GET")) {
