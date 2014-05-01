@@ -56,53 +56,6 @@ public class ThreadPoolManager implements Runnable {
     System.out.println("Server Stopped.") ;
   }
   
-  public static void handle(Socket client) {
-    Socket server = null;
-    HttpRequest request = null;
-    HttpResponse response = null;
-  
-    /* Process request. If there are any exceptions, then simply
-     * return and end this request. This unfortunately means the
-     * client will hang for a while, until it timeouts. */
-  
-    /* Read request */
-    try {
-        BufferedReader fromClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        request = new HttpRequest(fromClient);
-    } catch (IOException e) {
-        System.out.println("Error reading request from client: " + e);
-        return;
-    }
-    /* Send request to server */
-    try {
-        /* Open socket and write request to socket */
-        server = serverSocket.accept();
-        DataOutputStream toServer = new DataOutputStream(client.getOutputStream()); // Should it be client.getOutputStream() instead?
-        /* Fill in. KM TODO: start sending our HTTP request  */
-    } catch (UnknownHostException e) {
-        System.out.println("Unknown host: " + request.getHost());
-        System.out.println(e);
-        return;
-    } catch (IOException e) {
-        System.out.println("Error writing request to server: " + e);
-        return;
-    }
-    /* Read response and forward it to client */
-    try {
-        DataInputStream fromServer = new DataInputStream(server.getInputStream());
-        response = new HttpResponse(fromServer);
-        DataOutputStream toClient = new DataOutputStream(client.getOutputStream()); // Should it be server.getOutputStream() instead?
-        /* Fill in */
-        /* Write response to client. First headers, then body */
-        client.close();
-        server.close();
-        /* Insert object into the cache */
-        /* Fill in (optional exercise only) */
-    } catch (IOException e) {
-        System.out.println("Error writing response to client: " + e);
-    }
-  }
-  
   private synchronized boolean isStopped() {
     return this.isStopped;
   }
