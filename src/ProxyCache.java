@@ -26,53 +26,6 @@ public class ProxyCache {
       }
     }
 
-    public static void handle(Socket client) {
-      Socket server = null;
-      HttpRequest request = null;
-      HttpResponse response = null;
-    
-      /* Process request. If there are any exceptions, then simply
-       * return and end this request. This unfortunately means the
-       * client will hang for a while, until it timeouts. */
-    
-      /* Read request */
-      try {
-          BufferedReader fromClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
-          request = new HttpRequest(fromClient);
-      } catch (IOException e) {
-          System.out.println("Error reading request from client: " + e);
-          return;
-      }
-      /* Send request to server */
-      try {
-          /* Open socket and write request to socket */
-          server = socket.accept();
-          DataOutputStream toServer = new DataOutputStream(client.getOutputStream()); // Should it be client.getOutputStream() instead?
-          /* Fill in. KM TODO: start sending our HTTP request  */
-      } catch (UnknownHostException e) {
-          System.out.println("Unknown host: " + request.getHost());
-          System.out.println(e);
-          return;
-      } catch (IOException e) {
-          System.out.println("Error writing request to server: " + e);
-          return;
-      }
-      /* Read response and forward it to client */
-      try {
-          DataInputStream fromServer = new DataInputStream(server.getInputStream());
-          response = new HttpResponse(fromServer);
-          DataOutputStream toClient = new DataOutputStream(client.getOutputStream()); // Should it be server.getOutputStream() instead?
-          /* Fill in */
-          /* Write response to client. First headers, then body */
-          client.close();
-          server.close();
-          /* Insert object into the cache */
-          /* Fill in (optional exercise only) */
-      } catch (IOException e) {
-          System.out.println("Error writing response to client: " + e);
-      }
-    }
-
 
     /** Read command line arguments and start proxy */
     public static void main(String args[]) {
@@ -86,29 +39,9 @@ public class ProxyCache {
           System.out.println("Please give port number as integer.");
           System.exit(-1);
       }
-      
       init(myPort);
-    
-      /** Main loop. Listen for incoming connections and spawn a new
-       * thread for handling them */
-      Socket client = null;
       
-      while (true) {
-          try {
-            /* ServerSocket.accept() returns a new socket when a connection is 
-             * made. The method will block, but when it returns the socket will
-             * be connected to the client.
-             * Also, spawn a new thread for each request.
-             * */
-            client = socket.accept(); // KM: not finished
-            handle(client);
-          } catch (IOException e) {
-            System.out.println("Error reading request from client: " + e);
-            /* Definitely cannot continue processing this request,
-             * so skip to next iteration of while loop. */
-            continue;
-          }
-      }
-
+      ThreadPoolManager server = new ThreadPoolManager(socket);
+      new Thread(server).start();
     }
 }
