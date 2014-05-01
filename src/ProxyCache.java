@@ -26,16 +26,15 @@ public class ProxyCache {
       }
     }
 
-    public static void handle(Socket client) {
-      Socket server = null;
+    public static void handle(Socket proxyClient) {
+      Socket proxyServer = null;
+      String host = "google.com";
       HttpRequest request = null;
       HttpResponse response = null;
-//        InputStream streamFromClient = client.getInputStream();
-//        OutputStream streamToClient = client.getOutputStream();
+      InputStream streamFromClient = null;
+      OutputStream streamToClient = null;
       InputStream streamFromServer = null;
       OutputStream streamToServer = null;
-      System.out.println("START! Stream TO server = " + streamToServer);
-      System.out.println("START! Stream FROM server = " + streamFromServer);
       long time = System.currentTimeMillis();
       
       /* Process request. If there are any exceptions, then simply
@@ -44,8 +43,11 @@ public class ProxyCache {
       
       /* Read request */
       try {
-        BufferedReader fromClient = new BufferedReader(new InputStreamReader(client.getInputStream()));        
+        streamFromClient = proxyClient.getInputStream();
+        streamToClient = proxyClient.getOutputStream();
+        BufferedReader fromClient = new BufferedReader(new InputStreamReader(streamFromClient));        
         request = new HttpRequest(fromClient);
+        host = request.getHost();
 //              fromClient.close();
 //          System.out.println("============== " + request.toString());
       } catch (IOException e) {
@@ -56,12 +58,13 @@ public class ProxyCache {
       /* Send request to server */
       try {
           /* Open socket and write request to socket */
-          server = new Socket("127.0.0.1", port);
-          streamFromServer = server.getInputStream();
-          streamToServer = server.getOutputStream();
+          proxyServer = new Socket(host, 80);
+          streamFromServer = proxyServer.getInputStream();
+          streamToServer = proxyServer.getOutputStream();
           DataOutputStream toServer = new DataOutputStream(streamToServer);
           toServer.writeBytes(request.toString());
           toServer.flush();
+          System.out.println("###### Completed sending request to server");
 //            toServer.close();
       } catch (UnknownHostException e) {
           System.out.println("Unknown host: " + request.getHost());
@@ -74,21 +77,17 @@ public class ProxyCache {
       
       /* Read response and forward it to client */
       try {
+          System.out.println("###### Awaiting response from server...");
           DataInputStream fromServer = new DataInputStream(streamFromServer);
-          System.out.println("MID! Stream FROM server = " + streamFromServer);
+//          System.out.println("MID! Stream FROM server = " + streamFromServer);
 //          System.out.println("MID! DIS FROM server = first byte = " + fromServer.readByte());
           response = new HttpResponse(fromServer);
-          DataOutputStream toClient = new DataOutputStream(client.getOutputStream());
+          DataOutputStream toClient = new DataOutputStream(proxyClient.getOutputStream());
           
           /* Write response to client. First headers, then body */
           toClient.writeBytes(response.toString());
           toClient.write(response.getBody());
           toClient.flush();
-
-          client.close();
-          server.close();
-//            toClient.close();
-//            fromServer.close();
           /* Insert object into the cache */
           /* Fill in (optional exercise only) */
       } catch (IOException e) {
@@ -98,11 +97,19 @@ public class ProxyCache {
       
 //        output.write(("HTTP/1.1 200 OK\n\nWorkerRunnable: " +
 //                this.serverText + " - " + time + "").getBytes());
-      
-//        streamToClient.close();
-//        streamFromClient.close();
-      
+
       System.out.println("##### Socket reaches its end! Request processed: " + time);
+      try {
+        streamToClient.close();
+        streamFromClient.close();
+        streamToServer.close();
+        streamFromServer.close();
+        proxyClient.close();
+        proxyServer.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      
     }
 
     /** Read command line arguments and start proxy */
@@ -119,25 +126,25 @@ public class ProxyCache {
       }
       init(myPort);
       
-      /*
+      
       ThreadPoolManager server = new ThreadPoolManager(socket);
       new Thread(server).start();
-      */
       
-      /** Main loop. Listen for incoming connections and spawn a new
-       * thread for handling them */
-      Socket client = null;
       
-      while (true) {
-        try {
-          client = socket.accept();
-          handle(client);
-        } catch (IOException e) {
-          System.out.println("Error reading request from client: " + e);
-          /* Definitely cannot continue processing this request,
-           * so skip to next iteration of while loop. */
-          continue;
-        }
-      }
+//      /** Main loop. Listen for incoming connections and spawn a new
+//       * thread for handling them */
+//      Socket client = null;
+//      
+//      while (true) {
+//        try {
+//          client = socket.accept();
+//          handle(client);
+//        } catch (IOException e) {
+//          System.out.println("Error reading request from client: " + e);
+//          /* Definitely cannot continue processing this request,
+//           * so skip to next iteration of while loop. */
+//          continue;
+//        }
+//      }
     }
 }
