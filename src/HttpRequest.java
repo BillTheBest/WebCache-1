@@ -69,6 +69,7 @@ public class HttpRequest {
           System.out.println("Error reading from socket: " + e);
           return;
       }
+      System.out.println("Headers: " + headers);
       System.out.println("Host to contact is: " + host + " at port " + port);
     }
 
