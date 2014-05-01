@@ -25,15 +25,18 @@ public class HttpResponse {
     byte[] body = new byte[MAX_OBJECT_SIZE];
 
     /** Read response from server. */
-    public HttpResponse(DataInputStream fromServer) {
+    public HttpResponse (DataInputStream fromServer) {
       /* Length of the object */
       int length = -1;
       boolean gotStatusLine = false;
+      System.out.println("###### Entered Response!");
     
       /* First read status line and response headers */
       try {
+        System.out.println("###### Entered try!");
+          @SuppressWarnings("deprecation")
           String line =  fromServer.readLine();  /* Fill in */ //TODO
-//          System.out.println("RESPONSE === " + line);
+          System.out.println("RESPONSE === " + line);
           while (line.length() != 0) {
             if (!gotStatusLine) {
                 statusLine = line;
@@ -52,6 +55,7 @@ public class HttpResponse {
                 line.startsWith("Content-length")) {
                 String[] tmp = line.split(" ");
                 length = Integer.parseInt(tmp[1]);
+                System.out.println("###### Response Content-Length = " + length);
             }
             line = fromServer.readLine();
           }

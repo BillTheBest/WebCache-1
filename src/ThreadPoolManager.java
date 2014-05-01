@@ -38,9 +38,9 @@ public class ThreadPoolManager implements Runnable {
          * be connected to the client.
          * Also, spawn a new worker thread for each request.
          * */
-        client = serverSocket.accept();
-        this.threadPool.execute(new WorkerRunnable(client, serverSocket));
-//        this.threadPool.execute(new WorkerRunnable(serverSocket.accept(), serverSocket));
+//        client = serverSocket.accept();
+//        this.threadPool.execute(new WorkerRunnable(client, serverSocket));
+        this.threadPool.execute(new WorkerRunnable(serverSocket.accept(), serverSocket));
         
       } catch (IOException e) {
         if(isStopped()) {
