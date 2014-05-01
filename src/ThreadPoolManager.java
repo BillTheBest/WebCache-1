@@ -31,16 +31,16 @@ public class ThreadPoolManager implements Runnable {
      * thread for handling them */
     Socket client = null;
     
-    while (! isStopped()) {
+    while (!isStopped()) {
       try {
         /* ServerSocket.accept() returns a new socket when a connection is 
          * made. The method will block, but when it returns the socket will
          * be connected to the client.
-         * Also, spawn a new thread for each request.
+         * Also, spawn a new worker thread for each request.
          * */
         client = serverSocket.accept();
-        this.threadPool.execute(new WorkerRunnable(client));
-//        handle(client); /* The main work */
+        this.threadPool.execute(new WorkerRunnable(client, serverSocket));
+        
       } catch (IOException e) {
         if(isStopped()) {
           System.out.println("Server Stopped.") ;

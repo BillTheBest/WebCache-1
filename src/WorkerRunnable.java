@@ -1,6 +1,7 @@
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 /* Credit: this code is inspired from 
@@ -9,11 +10,11 @@ import java.net.Socket;
 public class WorkerRunnable implements Runnable {
 
     protected Socket clientSocket = null;
-    protected String serverText = null;
+    protected ServerSocket serverSocket = null;
 
-    public WorkerRunnable(Socket clientSocket) {
+    public WorkerRunnable(Socket clientSocket, ServerSocket serverSocket) {
         this.clientSocket = clientSocket;
-        this.serverText = "HI HI HI";
+        this.serverSocket = serverSocket;
     }
 
     public void run() {
