@@ -40,7 +40,7 @@ public class ThreadPoolManager implements Runnable {
          * */
         client = serverSocket.accept();
         this.threadPool.execute(new WorkerRunnable(client));
-        handle(client); /* The main work */
+//        handle(client); /* The main work */
       } catch (IOException e) {
         if(isStopped()) {
           System.out.println("Server Stopped.") ;

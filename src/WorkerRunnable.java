@@ -13,7 +13,7 @@ public class WorkerRunnable implements Runnable {
 
     public WorkerRunnable(Socket clientSocket) {
         this.clientSocket = clientSocket;
-        this.serverText   = serverText;
+        this.serverText = "HI HI HI";
     }
 
     public void run() {
