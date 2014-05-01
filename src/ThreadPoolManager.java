@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
  * http://tutorials.jenkov.com/java-multithreaded-servers/thread-pooled-server.html
  */
 public class ThreadPoolManager implements Runnable {
-  protected static ServerSocket serverSocket;
+  protected ServerSocket serverSocket;
   protected boolean isStopped = false;
   protected Thread runningThread = null;
   protected ExecutorService threadPool = Executors.newFixedThreadPool(10);
@@ -40,6 +40,7 @@ public class ThreadPoolManager implements Runnable {
          * */
         client = serverSocket.accept();
         this.threadPool.execute(new WorkerRunnable(client, serverSocket));
+//        this.threadPool.execute(new WorkerRunnable(serverSocket.accept(), serverSocket));
         
       } catch (IOException e) {
         if(isStopped()) {

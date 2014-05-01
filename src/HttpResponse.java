@@ -33,7 +33,7 @@ public class HttpResponse {
       /* First read status line and response headers */
       try {
           String line =  fromServer.readLine();  /* Fill in */ //TODO
-          System.out.println("RESPONSE === " + line);
+//          System.out.println("RESPONSE === " + line);
           while (line.length() != 0) {
             if (!gotStatusLine) {
                 statusLine = line;
@@ -96,6 +96,10 @@ public class HttpResponse {
       }
     }
 
+    public byte[] getBody() {
+      return body;
+    }
+    
     /**
      * Convert response into a string for easy re-sending. Only
      * converts the response headers, body is not converted to a

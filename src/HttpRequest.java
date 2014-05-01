@@ -31,16 +31,17 @@ public class HttpRequest {
           System.out.println("Error reading request line: " + e);
       }
     
+      System.out.println("###### FIRST LINE = " + firstLine);
       String[] tmp = firstLine.split(" ");
-      method = tmp[0] /* Fill in */; //TODO
-      URI = tmp[1] /* Fill in */; //TODO
-      version = tmp[2] /* Fill in */; //TODO
+      method = tmp[0];
+      URI = tmp[1];
+      version = tmp[2];
 
-      int i = 0;
-      for (String s : tmp) {
-        System.out.println("TMP #" + i + " = " + s);  
-        i++;
-      }
+//      int i = 0;
+//      for (String s : tmp) {
+//        System.out.println("TMP #" + i + " = " + s);  
+//        i++;
+//      }
       System.out.println("URI is: " + URI);
     
       if (!method.equals("GET")) {
@@ -69,7 +70,7 @@ public class HttpRequest {
           System.out.println("Error reading from socket: " + e);
           return;
       }
-      System.out.println("Headers: " + headers);
+//      System.out.println("Headers: " + headers);
       System.out.println("Host to contact is: " + host + " at port " + port);
     }
 
